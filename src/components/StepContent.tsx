@@ -68,6 +68,12 @@ export function StepContent({
     setExpandedSubs(prev => ({ ...prev, ...all }))
   }
 
+  const isOptional = (action: string) => /\(optional|\(Optional/i.test(action)
+  const requiredSubs = step.substeps.filter(sub => !isOptional(sub.action))
+  const requiredVerified = requiredSubs.filter((_, i) => {
+    const origIdx = step.substeps.indexOf(requiredSubs[i])
+    return checkedItems[`${step.id}-${origIdx}`]
+  }).length
   const verifiedCount = step.substeps.filter((_, i) => checkedItems[`${step.id}-${i}`]).length
 
   return (
@@ -120,7 +126,12 @@ export function StepContent({
                   onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') toggleSub(subKey) }}
                 >
                   <span className="substep-number">{currentStep}.{i + 1}</span>
-                  <div className="substep-action">{renderText(sub.action)}</div>
+                  <div className="substep-action">
+                    {renderText(sub.action)}
+                    {/\(optional|\(Optional/i.test(sub.action) && (
+                      <span className="badge-optional">Optional</span>
+                    )}
+                  </div>
                   <span className={`substep-chevron ${expanded ? 'open' : ''}`}>▸</span>
                 </div>
 
@@ -233,7 +244,9 @@ export function StepContent({
 
         <div className="step-progress-summary">
           <span>
-            {verifiedCount} of {step.substeps.length} verifications completed
+            {requiredVerified} of {requiredSubs.length} required verifications completed
+            {verifiedCount > requiredVerified && (
+              <> ({verifiedCount - requiredVerified} optional)</>)}
           </span>
           {verifiedCount > 0 && (
             <button

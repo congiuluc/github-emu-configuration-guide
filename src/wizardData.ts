@@ -5958,11 +5958,16 @@ function buildSsoStep(
         {
           action: 'In the Azure Portal, go to Entra ID → Enterprise Applications → New application.',
           details: [
+            'Open the Microsoft Entra admin center: https://entra.microsoft.com',
             'Search the gallery for "GitHub Enterprise Managed User".',
             'Select the application and click Create.',
           ],
           verification: 'The "GitHub Enterprise Managed User" application appears in your Enterprise Applications list.',
           docLinks: [{
+            title: 'Microsoft Entra admin center',
+            url: 'https://entra.microsoft.com',
+            description: 'Direct link to the Microsoft Entra admin portal',
+          }, {
             title: 'Entra ID gallery app for EMU',
             url: 'https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial',
             description: 'Microsoft tutorial: Entra ID + GitHub EMU SAML integration',
@@ -6158,12 +6163,17 @@ function buildSsoStep(
           action: 'In Entra ID, consent and install the GitHub Enterprise Managed User (OIDC) application.',
           details: [
             'After GitHub redirects you, sign in to Entra ID as a Global Administrator.',
+            'If not redirected, open the Microsoft Entra admin center: https://entra.microsoft.com',
             'Review the permissions requested by the GitHub Enterprise Managed User (OIDC) app.',
             'Enable "Consent on behalf of your organization".',
             'Click "Accept" to install the application and grant permissions.',
           ],
           verification: 'The GitHub Enterprise Managed User (OIDC) app appears in Entra ID → Enterprise Applications.',
           docLinks: [{
+            title: 'Microsoft Entra admin center',
+            url: 'https://entra.microsoft.com',
+            description: 'Direct link to the Microsoft Entra admin portal',
+          }, {
             title: 'Entra ID OIDC provisioning for EMU',
             url: 'https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-oidc-provisioning-tutorial',
             description: 'Microsoft tutorial: Entra ID + GitHub EMU OIDC integration',
@@ -6195,6 +6205,7 @@ function buildSsoStep(
         {
           action: '(Optional) Configure Conditional Access Policies in Entra ID.',
           details: [
+            'Open the Microsoft Entra admin center: https://entra.microsoft.com',
             'Go to Entra ID → Security → Conditional Access → New Policy.',
             'Target the GitHub EMU OIDC enterprise application.',
             'Common policies: require MFA, block legacy authentication, restrict by location/IP range.',
@@ -6258,12 +6269,17 @@ function buildSsoStep(
         {
           action: 'In the Okta Admin Console, go to Applications → Browse App Catalog.',
           details: [
+            'Open the Okta Admin Console: https://login.okta.com (sign in and select your org)',
             'Search for "GitHub Enterprise Managed User".',
             'Click "Add Integration".',
             'Choose a label name (e.g., "GitHub EMU - YOUR-ENTERPRISE").',
           ],
           verification: 'The "GitHub Enterprise Managed User" OIN application appears in your Okta applications list.',
           docLinks: [{
+            title: 'Okta Admin Console',
+            url: 'https://login.okta.com',
+            description: 'Direct link to the Okta administrator portal',
+          }, {
             title: 'Okta + GitHub EMU integration',
             url: 'https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/configuring-authentication-for-enterprise-managed-users/configuring-saml-single-sign-on-for-enterprise-managed-users',
             description: 'GitHub docs: configuring authentication for EMU (includes Okta)',
@@ -6469,9 +6485,15 @@ function adjustPrerequisitesForIdp(
             ? 'Entra ID with OIDC is the recommended configuration — it provides the deepest integration, including Conditional Access Policy (CAP) support.'
             : 'Entra ID with SAML is supported but does not include Conditional Access Policy (CAP) support. Consider OIDC if CAP is needed.',
           'You will need to create an Enterprise Application in Entra ID for SSO and a separate one for SCIM provisioning.',
+          'Open the Microsoft Entra admin center: https://entra.microsoft.com',
         ],
         verification: 'Confirm you have admin access to your Entra ID tenant and can create enterprise applications.',
         docLinks: [
+          {
+            title: 'Microsoft Entra admin center',
+            url: 'https://entra.microsoft.com',
+            description: 'Direct link to the Microsoft Entra admin portal',
+          },
           {
             title: 'Configuring authentication for EMU',
             url: 'https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/getting-started-with-enterprise-managed-users',
@@ -6485,9 +6507,15 @@ function adjustPrerequisitesForIdp(
           `You have selected ${idpLabel} as your Identity Provider with SAML single sign-on.`,
           'Okta supports SAML SSO + SCIM provisioning for EMU enterprises.',
           'You will need to add the "GitHub Enterprise Managed User" application from the Okta Integration Network (OIN).',
+          'Open the Okta Admin Console: https://your-org-admin.okta.com',
         ],
         verification: 'Confirm you have admin access to your Okta organization and can add applications from the OIN catalog.',
         docLinks: [
+          {
+            title: 'Okta Admin Console',
+            url: 'https://login.okta.com',
+            description: 'Direct link to the Okta administrator portal',
+          },
           {
             title: 'Configuring SAML for EMU with Okta',
             url: 'https://saml-doc.okta.com/SAML_Docs/How-to-Configure-SAML-2.0-for-GitHub-Enterprise-Managed-User.html',
@@ -6527,8 +6555,8 @@ function adjustScimForIdp(step: WizardStep, idp: IdpType): WizardStep {
     notes: [
       ...(step.notes || []),
       isEntra
-        ? 'Use the Provisioning tab on the Entra ID Enterprise Application to configure SCIM.'
-        : 'Use the Provisioning → "To App" settings in Okta to configure SCIM.',
+        ? 'Use the Provisioning tab on the Entra ID Enterprise Application to configure SCIM: https://entra.microsoft.com'
+        : 'Use the Provisioning → "To App" settings in Okta to configure SCIM: https://login.okta.com',
     ],
   }
 }
@@ -6549,7 +6577,8 @@ function adjustTeamsForIdp(step: WizardStep, idp: IdpType): WizardStep {
         ...sub,
         action: 'Create Security groups in Microsoft Entra ID.',
         details: [
-          'Go to the Azure portal → Microsoft Entra ID → Groups → New group.',
+          'Open the Microsoft Entra admin center: https://entra.microsoft.com',
+          'Go to Microsoft Entra ID → Groups → New group.',
           'Group type: Select "Security". Do NOT use "Microsoft 365" — M365 groups create a shared mailbox, calendar, and SharePoint site which are unnecessary for GitHub team sync and may cause provisioning issues.',
           'Group name: Use a clear naming convention (e.g., "GitHub-Developers", "GitHub-Copilot-Users").',
           'Membership type: Choose "Assigned" for manual control, or "Dynamic User" to auto-populate based on user attributes (e.g., department = "Engineering").',
@@ -6562,7 +6591,8 @@ function adjustTeamsForIdp(step: WizardStep, idp: IdpType): WizardStep {
         ...sub,
         action: 'Create groups in Okta.',
         details: [
-          'Go to the Okta Admin Console → Directory → Groups → Add Group.',
+          'Open the Okta Admin Console: https://login.okta.com',
+          'Go to Directory → Groups → Add Group.',
           'Name: Use a clear naming convention (e.g., "GitHub-Developers", "GitHub-Copilot-Users").',
           'Add the appropriate users as members of each group.',
           'Repeat for each planned group.',
@@ -6577,7 +6607,7 @@ function adjustTeamsForIdp(step: WizardStep, idp: IdpType): WizardStep {
         ...sub,
         action: 'Assign the Entra Security groups to the GitHub Enterprise Application.',
         details: [
-          'Go to Azure portal → Microsoft Entra ID → Enterprise Applications → select your GitHub EMU app.',
+          'In the Entra admin center (https://entra.microsoft.com), go to Enterprise Applications → select your GitHub EMU app.',
           'Click "Users and groups" → Add user/group.',
           'Select each Security group and assign it to the application.',
           'Ensure all groups that should sync to GitHub teams are assigned here.',
@@ -6588,7 +6618,7 @@ function adjustTeamsForIdp(step: WizardStep, idp: IdpType): WizardStep {
         ...sub,
         action: 'Assign the Okta groups to the GitHub Enterprise Application.',
         details: [
-          'Go to Okta Admin Console → Applications → select your GitHub EMU app.',
+          'In the Okta Admin Console (https://login.okta.com), go to Applications → select your GitHub EMU app.',
           'Click Assignments → Assign → Assign to Groups.',
           'Select each group and confirm the assignment.',
         ],
@@ -6602,7 +6632,7 @@ function adjustTeamsForIdp(step: WizardStep, idp: IdpType): WizardStep {
         ...sub,
         action: 'Trigger an Entra ID provisioning cycle to sync the groups.',
         details: [
-          'Go to Azure portal → Enterprise Applications → your GitHub EMU app → Provisioning.',
+          'In the Entra admin center (https://entra.microsoft.com), go to Enterprise Applications → your GitHub EMU app → Provisioning.',
           'Click "Provision on demand" to sync a specific group immediately, or wait for the automatic cycle (runs every 20-40 minutes).',
           'Check the Provisioning logs for any errors — look for "Create Group" and "Update Group" events.',
         ],
@@ -6612,7 +6642,7 @@ function adjustTeamsForIdp(step: WizardStep, idp: IdpType): WizardStep {
         ...sub,
         action: 'Push the Okta groups to GitHub via SCIM.',
         details: [
-          'Go to Okta Admin Console → Applications → your GitHub EMU app → Provisioning → Push Groups.',
+          'In the Okta Admin Console (https://login.okta.com), go to Applications → your GitHub EMU app → Provisioning → Push Groups.',
           'Click "Push Groups" → "Find groups by name" and select each group to push.',
           'Choose "Push group memberships immediately".',
           'Monitor the Push Groups log for successful sync.',
@@ -6637,7 +6667,7 @@ export function getSteps(config: WizardConfig, enterpriseName: string): WizardSt
   const { dataResidency, idpType, ssoProtocol, manageCopilot, manageOrgs, manageGHAS } = config
   const base = dataResidency ? drSteps : noDrSteps
   const idPrefix = dataResidency ? 'dr-' : 'nodr-'
-  const ssoStepId = `${idPrefix}configure-sso`
+  const ssoStepId = dataResidency ? 'dr-configure-sso' : 'nodr-sso'
   const scimStepId = dataResidency ? 'dr-configure-scim' : 'nodr-scim'
   const teamsStepId = dataResidency ? 'dr-enterprise-teams' : 'nodr-enterprise-teams'
   const prereqStepId = `${idPrefix}prerequisites`

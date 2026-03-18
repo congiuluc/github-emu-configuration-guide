@@ -134,7 +134,9 @@ function GuidePage({
   const isStepCompleted = (stepIndex: number) => {
     const s = steps[stepIndex]
     if (!s.substeps || s.substeps.length === 0) return false
-    return s.substeps.every((_, i) => checkedItems[`${s.id}-${i}`])
+    return s.substeps.every((sub, i) =>
+      /\(optional|\(Optional/i.test(sub.action) || checkedItems[`${s.id}-${i}`]
+    )
   }
 
   const completedCount = steps.filter((_, i) => isStepCompleted(i)).length

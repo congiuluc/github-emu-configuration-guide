@@ -925,6 +925,25 @@ a:hover {
   line-height: 1.6;
   color: var(--color-text);
   padding-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge-optional {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  background: #e6f9f0;
+  color: #0d7d56;
+  border: 1px solid #a3e4c9;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .substep-details {
