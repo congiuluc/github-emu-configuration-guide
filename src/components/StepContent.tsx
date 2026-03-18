@@ -115,7 +115,7 @@ export function StepContent({
             const checkKey = `${step.id}-${i}`
             const subKey = `${step.id}-sub-${i}`
             const verified = !!checkedItems[checkKey]
-            const expanded = expandedSubs[subKey] !== false
+            const expanded = !!expandedSubs[subKey]
             return (
               <div key={i} className={`substep-card ${verified ? 'substep-verified' : ''}`}>
                 <div
