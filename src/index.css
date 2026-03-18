@@ -940,6 +940,95 @@ a:hover {
   margin-bottom: 4px;
 }
 
+/* ── Email template block ── */
+
+.email-template-block {
+  margin: 8px 0 0 40px;
+}
+
+.email-template-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.email-template-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.btn-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-mail:hover {
+  background: #1a7f37;
+  border-color: #1a7f37;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+.email-template-content {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.email-template-subject {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.email-template-body {
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.email-template-body > p {
+  margin: 0 0 8px;
+}
+
+.email-template-section {
+  margin: 14px 0;
+}
+
+.email-template-section h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.email-template-section p {
+  margin: 0 0 4px;
+}
+
+.email-template-closing {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
 .substep-docs {
   display: flex;
   flex-wrap: wrap;

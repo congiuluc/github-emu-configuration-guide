@@ -25,9 +25,23 @@ export interface DocLink {
   description?: string;
 }
 
+export interface EmailTemplateSection {
+  heading: string;
+  lines: string[];
+}
+
+export interface EmailTemplate {
+  subject: string;
+  greeting: string;
+  intro: string;
+  sections: EmailTemplateSection[];
+  closing: string[];
+}
+
 export interface SubStep {
   action: string;
   details?: string[];
+  emailTemplate?: EmailTemplate;
   verification: string;
   docLinks?: DocLink[];
 }
@@ -2162,7 +2176,7 @@ const drSteps: WizardStep[] = [
       'Install and sign in to Copilot in VS Code, JetBrains, or Visual Studio. For GHE.com you must configure the enterprise URL so the IDE authenticates against GHE.com SSO instead of the default github.com.',
     prerequisites: [
       'A managed user account with an assigned Copilot seat.',
-      'VS Code (1.80+), JetBrains IDE (2023.1+), or Visual Studio 2022 (17.6+) installed.',
+      'VS Code (1.80+), JetBrains IDE (2025.1+), or Visual Studio 2026 (18.0+) installed.',
       'Network access to https://YOUR-ENTERPRISE.ghe.com from developer machines (firewall/proxy rules configured).',
     ],
     substeps: [
@@ -2248,7 +2262,7 @@ const drSteps: WizardStep[] = [
         ],
       },
       {
-        action: 'Visual Studio 2022: Configure GHE.com enterprise account for SSO.',
+        action: 'Visual Studio 2026: Configure GHE.com enterprise account for SSO.',
         details: [
           'Ensure GitHub Copilot is enabled: Tools \u2192 Options \u2192 GitHub \u2192 Copilot.',
           'Go to File \u2192 Account Settings \u2192 Add \u2192 "Add GitHub Enterprise account".',
@@ -2911,42 +2925,8 @@ const drSteps: WizardStep[] = [
         ],
       },
       {
-        action: 'Email Subject: Welcome to GitHub Enterprise — YOUR-ENTERPRISE on GHE.com',
-        details: [
-          '——— EMAIL BODY START ———',
-          '',
-          'Hello,',
-          '',
-          'You now have access to our GitHub Enterprise environment. Here is everything you need to get started.',
-          '',
-          '🏢 ENTERPRISE ACCESS',
-          'Enterprise URL: https://YOUR-ENTERPRISE.ghe.com',
-          'Navigate to the URL above — you will be redirected to our SSO provider (Entra ID / Okta). Sign in with your corporate credentials. Your GitHub username will be in the format username_SHORTCODE, automatically provisioned from your IdP account.',
-          '',
-          '💻 IDE SETUP — GitHub Copilot',
-          'GitHub Copilot is available for code completions and chat. Because our enterprise uses GHE.com (data residency), you must configure the enterprise URL in your IDE before signing in.',
-          '',
-          'VS Code — Open Settings (Ctrl+, / Cmd+,), search "enterprise", set "Github-enterprise: Uri" to https://YOUR-ENTERPRISE.ghe.com. Then search "copilot", under "GitHub > Copilot: Advanced" click "Edit in settings.json" and add "authProvider": "github-enterprise". Save and sign in when prompted.',
-          '',
-          'Visual Studio 2022 — Go to File → Account Settings → Add → "Add GitHub Enterprise account" (NOT "Add GitHub account"). Enter https://YOUR-ENTERPRISE.ghe.com and complete SSO sign-in.',
-          '',
-          'JetBrains — Install "GitHub Copilot" plugin. Go to Settings → Languages & Frameworks → GitHub Copilot, set Auth Provider to "GitHub Enterprise", enter https://YOUR-ENTERPRISE.ghe.com, and sign in.',
-          '',
-          '⚠️ IMPORTANT',
-          'This is a managed user account, separate from any personal GitHub.com account. You cannot create personal repositories or contribute to public open-source projects outside the enterprise. Your account is provisioned and deprovisioned automatically via your corporate identity provider.',
-          '',
-          '📚 RESOURCES',
-          'Managed user info: https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts',
-          'Copilot quickstart: https://docs.github.com/en/copilot/get-started',
-          'GHE.com auth guide: https://docs.github.com/en/copilot/how-tos/configure-personal-settings/authenticate-to-ghecom',
-          '',
-          'Questions or sign-in issues? Contact [YOUR IT SUPPORT CHANNEL].',
-          '',
-          'Best regards,',
-          '[YOUR NAME / TEAM]',
-          '',
-          '——— EMAIL BODY END ———',
-        ],
+        action: 'Review and send the welcome email template.',
+        // emailTemplate is injected dynamically by getSteps() based on config
         verification: 'The email has been sent to all users. Verify with a test recipient that links work and instructions are clear.',
         docLinks: [
           {
@@ -2958,20 +2938,10 @@ const drSteps: WizardStep[] = [
       },
       {
         action: 'Monitor user onboarding and provide support.',
-        details: [
-          'Track how many users have successfully signed in to GHE.com (check Enterprise \u2192 People).',
-          'Monitor Copilot seat usage in Enterprise \u2192 Settings \u2192 Copilot \u2192 Usage.',
-          'Set up a support channel (Slack/Teams) for users to report issues.',
-          'Common issues: SSO login loops (clear browser cookies), IDE not connecting (check enterprise URI setting), "No access" errors (verify Copilot seat assignment).',
-        ],
-        verification: 'All target users have signed in successfully and Copilot is active for assigned users.',
-        docLinks: [
-          {
-            title: 'Viewing Copilot usage',
-            url: 'https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-usage-data-for-github-copilot-in-your-organization',
-            description: 'Monitor Copilot adoption and usage',
-          },
-        ],
+        // details, verification, and docLinks are injected dynamically by getSteps() based on config
+        details: [],
+        verification: 'All target users have signed in successfully.',
+        docLinks: [],
       },
     ],
     tips: [
@@ -5057,7 +5027,7 @@ const noDrSteps: WizardStep[] = [
       'Install and sign in to Copilot in VS Code, JetBrains, or Visual Studio.',
     prerequisites: [
       'A managed user account with an assigned Copilot seat.',
-      'VS Code (1.80+), JetBrains IDE (2023.1+), or Visual Studio 2022 (17.6+) installed.',
+      'VS Code (1.80+), JetBrains IDE (2025.1+), or Visual Studio 2026 (18.0+) installed.',
       'Network access to github.com from developer machines (firewall/proxy rules configured).',
     ],
     substeps: [
@@ -5110,7 +5080,7 @@ const noDrSteps: WizardStep[] = [
         ],
       },
       {
-        action: 'Visual Studio 2022: Set up GitHub Copilot.',
+        action: 'Visual Studio 2026: Set up GitHub Copilot.',
         details: [
           'Go to Tools → Options → GitHub → Copilot → ensure enabled.',
           'Go to File → Account Settings → sign in with your GitHub managed user account.',
@@ -5734,41 +5704,8 @@ const noDrSteps: WizardStep[] = [
         ],
       },
       {
-        action: 'Email Subject: Welcome to GitHub Enterprise — YOUR-ENTERPRISE',
-        details: [
-          '——— EMAIL BODY START ———',
-          '',
-          'Hello,',
-          '',
-          'You now have access to our GitHub Enterprise environment. Here is everything you need to get started.',
-          '',
-          '🏢 ENTERPRISE ACCESS',
-          'Enterprise URL: https://github.com/enterprises/YOUR-ENTERPRISE',
-          'Navigate to github.com — you will be redirected to our SSO provider (Entra ID / Okta). Sign in with your corporate credentials. Your GitHub username will be in the format username_SHORTCODE, automatically provisioned from your IdP account.',
-          '',
-          '💻 IDE SETUP — GitHub Copilot',
-          'GitHub Copilot is available for code completions and chat in your IDE.',
-          '',
-          'VS Code — Install "GitHub Copilot" and "GitHub Copilot Chat" extensions. Click the Copilot icon in the status bar → "Sign in to GitHub" and complete SSO with your managed user account (username_SHORTCODE).',
-          '',
-          'Visual Studio 2022 — Go to File → Account Settings, sign in with your GitHub managed user account and complete SSO.',
-          '',
-          'JetBrains — Install "GitHub Copilot" plugin, click "Sign in to GitHub" when prompted, and complete SSO.',
-          '',
-          '⚠️ IMPORTANT',
-          'This is a managed user account, separate from any personal GitHub.com account. You cannot create personal repositories or contribute to public open-source projects outside the enterprise. Your account is provisioned and deprovisioned automatically via your corporate identity provider.',
-          '',
-          '📚 RESOURCES',
-          'Managed user info: https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts',
-          'Copilot quickstart: https://docs.github.com/en/copilot/get-started',
-          '',
-          'Questions or sign-in issues? Contact [YOUR IT SUPPORT CHANNEL].',
-          '',
-          'Best regards,',
-          '[YOUR NAME / TEAM]',
-          '',
-          '——— EMAIL BODY END ———',
-        ],
+        action: 'Review and send the welcome email template.',
+        // emailTemplate is injected dynamically by getSteps() based on config
         verification: 'The email has been sent to all users. Verify with a test recipient that links work and instructions are clear.',
         docLinks: [
           {
@@ -5780,20 +5717,10 @@ const noDrSteps: WizardStep[] = [
       },
       {
         action: 'Monitor user onboarding and provide support.',
-        details: [
-          'Track how many users have successfully signed in (check Enterprise \u2192 People).',
-          'Monitor Copilot seat usage in Enterprise \u2192 Settings \u2192 Copilot \u2192 Usage.',
-          'Set up a support channel (Slack/Teams) for users to report issues.',
-          'Common issues: SSO login loops (clear browser cookies), "No access" errors (verify Copilot seat assignment), wrong account (must use username_SHORTCODE handle).',
-        ],
-        verification: 'All target users have signed in successfully and Copilot is active for assigned users.',
-        docLinks: [
-          {
-            title: 'Viewing Copilot usage',
-            url: 'https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-usage-data-for-github-copilot-in-your-organization',
-            description: 'Monitor Copilot adoption and usage',
-          },
-        ],
+        // details, verification, and docLinks are injected dynamically by getSteps() based on config
+        details: [],
+        verification: 'All target users have signed in successfully.',
+        docLinks: [],
       },
     ],
     tips: [
@@ -5815,6 +5742,155 @@ const noDrSteps: WizardStep[] = [
   },
 ];
 
+function buildMonitorSubstep(config: WizardConfig): SubStep {
+  const { dataResidency, manageCopilot, manageOrgs, manageGHAS } = config
+
+  const details: string[] = [
+    dataResidency
+      ? 'Track how many users have successfully signed in to GHE.com (check Enterprise > People).'
+      : 'Track how many users have successfully signed in (check Enterprise > People).',
+    'Set up a support channel (Slack/Teams) for users to report issues.',
+  ]
+
+  const commonIssues: string[] = ['SSO login loops (clear browser cookies)']
+  const verificationParts: string[] = ['All target users have signed in successfully']
+  const docLinks: DocLink[] = []
+
+  if (manageCopilot) {
+    details.push('Monitor **Copilot** seat usage in Enterprise > Settings > Copilot > Usage.')
+    if (dataResidency) {
+      commonIssues.push('IDE not connecting (check enterprise URI setting)')
+    }
+    commonIssues.push('"No access" errors (verify Copilot seat assignment)')
+    verificationParts.push('Copilot is active for assigned users')
+    docLinks.push({
+      title: 'Viewing Copilot usage',
+      url: 'https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-usage-data-for-github-copilot-in-your-organization',
+      description: 'Monitor Copilot adoption and usage',
+    })
+  }
+
+  if (manageOrgs) {
+    details.push('Verify **organization** membership: check that users appear in the correct organizations and teams.')
+    verificationParts.push('organization memberships are correct')
+  }
+
+  if (manageGHAS) {
+    details.push('Check **GitHub Advanced Security** enablement: verify GHAS features (code scanning, secret scanning, Dependabot) are active on target repositories.')
+    verificationParts.push('GHAS is enabled on target repositories')
+    docLinks.push({
+      title: 'About GitHub Advanced Security',
+      url: 'https://docs.github.com/en/enterprise-cloud@latest/get-started/learning-about-github/about-github-advanced-security',
+      description: 'GHAS features overview',
+    })
+  }
+
+  commonIssues.push('wrong account (must use username_SHORTCODE handle)')
+  details.push(`Common issues: ${commonIssues.join(', ')}.`)
+
+  return {
+    action: 'Monitor user onboarding and provide support.',
+    details,
+    verification: `${verificationParts.join(', ')}.`,
+    docLinks,
+  }
+}
+
+function buildEmailTemplate(config: WizardConfig): EmailTemplate {
+  const { dataResidency, idpType, manageCopilot } = config
+  const isEntra = idpType === 'entra-id'
+  const idpLabel = isEntra ? 'Microsoft Entra ID' : 'Okta'
+
+  const enterpriseUrl = dataResidency
+    ? 'https://YOUR-ENTERPRISE.ghe.com'
+    : 'https://github.com/enterprises/YOUR-ENTERPRISE'
+
+  const subject = dataResidency
+    ? 'Welcome to GitHub Enterprise - YOUR-ENTERPRISE on GHE.com'
+    : 'Welcome to GitHub Enterprise - YOUR-ENTERPRISE'
+
+  // --- Access section ---
+  const accessLines: string[] = [
+    `**Enterprise URL:** ${enterpriseUrl}`,
+    `Navigate to the URL above. You will be redirected to **${idpLabel}** for single sign-on. Sign in with your **corporate credentials**. Your GitHub username will be in the format **username_SHORTCODE**, automatically provisioned from your ${idpLabel} account.`,
+  ]
+
+  // --- Copilot / IDE section (only if manageCopilot is enabled) ---
+  const copilotSection: EmailTemplateSection[] = []
+  if (manageCopilot) {
+    const ideLines: string[] = []
+    if (dataResidency) {
+      ideLines.push(
+        '**GitHub Copilot** is available for code completions and chat. Because our enterprise uses **GHE.com** (data residency), you must configure the enterprise URL in your IDE before signing in.',
+      )
+      ideLines.push(
+        '**VS Code** (latest: v1.100+): Open Settings (Ctrl+, / Cmd+,), search "enterprise", set "Github-enterprise: Uri" to https://YOUR-ENTERPRISE.ghe.com. Then search "copilot", under "GitHub > Copilot: Advanced" click "Edit in settings.json" and add "authProvider": "github-enterprise". Save and sign in when prompted.',
+      )
+      ideLines.push(
+        '**Visual Studio 2026** (latest: v18.0+): Go to File > Account Settings > Add > "Add GitHub Enterprise account" (NOT "Add GitHub account"). Enter https://YOUR-ENTERPRISE.ghe.com and complete SSO sign-in.',
+      )
+      ideLines.push(
+        '**JetBrains IDEs** (2025.1+, e.g. IntelliJ IDEA, Rider, WebStorm): Install "GitHub Copilot" plugin. Go to Settings > Languages & Frameworks > GitHub Copilot, set Auth Provider to "GitHub Enterprise", enter https://YOUR-ENTERPRISE.ghe.com, and sign in.',
+      )
+    } else {
+      ideLines.push(
+        '**GitHub Copilot** is available for code completions and chat in your IDE.',
+      )
+      ideLines.push(
+        '**VS Code** (latest: v1.100+): Install "GitHub Copilot" and "GitHub Copilot Chat" extensions. Click the Copilot icon in the status bar, click "Sign in to GitHub" and complete SSO with your managed user account (**username_SHORTCODE**).',
+      )
+      ideLines.push(
+        '**Visual Studio 2026** (latest: v18.0+): Go to File > Account Settings, sign in with your GitHub managed user account and complete SSO.',
+      )
+      ideLines.push(
+        '**JetBrains IDEs** (2025.1+, e.g. IntelliJ IDEA, Rider, WebStorm): Install "GitHub Copilot" plugin, click "Sign in to GitHub" when prompted, and complete SSO.',
+      )
+    }
+    copilotSection.push({
+      heading: '\uD83D\uDCBB IDE SETUP - GitHub Copilot',
+      lines: ideLines,
+    })
+  }
+
+  // --- Important section ---
+  const importantLines: string[] = [
+    `This is a **managed user account**, separate from any personal GitHub.com account. You cannot create personal repositories or contribute to public open-source projects outside the enterprise. Your account is **provisioned and deprovisioned automatically** via ${idpLabel}.`,
+  ]
+
+  // --- Resources section ---
+  const resourceLines: string[] = [
+    'Managed user info: https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts',
+  ]
+  if (manageCopilot) {
+    resourceLines.push(
+      'Copilot quickstart: https://docs.github.com/en/copilot/get-started',
+    )
+    if (dataResidency) {
+      resourceLines.push(
+        'GHE.com auth guide: https://docs.github.com/en/copilot/how-tos/configure-personal-settings/authenticate-to-ghecom',
+      )
+    }
+  }
+
+  return {
+    subject,
+    greeting: 'Hello,',
+    intro: 'You now have access to our **GitHub Enterprise** environment. Here is everything you need to get started.',
+    sections: [
+      { heading: '\uD83C\uDFE2 ENTERPRISE ACCESS', lines: accessLines },
+      ...copilotSection,
+      { heading: '\u26A0\uFE0F IMPORTANT', lines: importantLines },
+      { heading: '\uD83D\uDCDA RESOURCES', lines: resourceLines },
+    ],
+    closing: [
+      'Questions or sign-in issues? Contact **[YOUR IT SUPPORT CHANNEL]**.',
+      '',
+      'Best regards,',
+      '[YOUR NAME / TEAM]',
+    ],
+  }
+}
+
 function replaceEnterprise(steps: WizardStep[], name: string): WizardStep[] {
   const r = (s: string) => s.replaceAll('YOUR-ENTERPRISE', name || 'YOUR-ENTERPRISE')
   return steps.map(step => ({
@@ -5824,6 +5900,16 @@ function replaceEnterprise(steps: WizardStep[], name: string): WizardStep[] {
       action: r(sub.action),
       details: sub.details?.map(r),
       verification: r(sub.verification),
+      emailTemplate: sub.emailTemplate ? {
+        ...sub.emailTemplate,
+        subject: r(sub.emailTemplate.subject),
+        intro: r(sub.emailTemplate.intro),
+        sections: sub.emailTemplate.sections.map(sec => ({
+          ...sec,
+          lines: sec.lines.map(r),
+        })),
+        closing: sub.emailTemplate.closing.map(r),
+      } : undefined,
     })),
     notes: step.notes?.map(r),
     warnings: step.warnings?.map(r),
@@ -6595,6 +6681,26 @@ export function getSteps(config: WizardConfig, enterpriseName: string): WizardSt
   if (!manageGHAS) {
     steps = steps.filter(s => !s.id.startsWith(`${idPrefix}ghas`))
   }
+
+  // Inject dynamic email template and monitor substep into the notify-users step
+  const notifyId = dataResidency ? 'dr-notify-users' : 'nodr-notify-users'
+  const emailTpl = buildEmailTemplate(config)
+  const monitorSub = buildMonitorSubstep(config)
+  steps = steps.map(step => {
+    if (step.id !== notifyId) return step
+    return {
+      ...step,
+      substeps: step.substeps.map(sub => {
+        if (sub.action === 'Review and send the welcome email template.') {
+          return { ...sub, emailTemplate: emailTpl }
+        }
+        if (sub.action === 'Monitor user onboarding and provide support.') {
+          return monitorSub
+        }
+        return sub
+      }),
+    }
+  })
 
   return enterpriseName ? replaceEnterprise(steps, enterpriseName) : steps
 }

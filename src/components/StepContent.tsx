@@ -1,7 +1,34 @@
 import { useState } from 'react'
 import { ExternalLinkIcon } from './Icons'
 import { renderText } from '../utils/renderText'
-import type { WizardStep } from '../wizardData'
+import type { WizardStep, EmailTemplate } from '../wizardData'
+
+function buildMailtoLink(tpl: EmailTemplate): string {
+  const NL = '\r\n'
+  const strip = (s: string) => s.replace(/\*\*(.+?)\*\*/g, '$1')
+  const bodyParts: string[] = [
+    strip(tpl.greeting),
+    '',
+    strip(tpl.intro),
+    '',
+  ]
+  for (const section of tpl.sections) {
+    bodyParts.push('---')
+    bodyParts.push(strip(section.heading))
+    bodyParts.push('')
+    for (const line of section.lines) {
+      bodyParts.push(strip(line))
+      bodyParts.push('')
+    }
+  }
+  bodyParts.push('---')
+  bodyParts.push('')
+  bodyParts.push(...tpl.closing.map(strip))
+
+  const subject = encodeURIComponent(tpl.subject)
+  const body = encodeURIComponent(bodyParts.join(NL))
+  return `mailto:?subject=${subject}&body=${body}`
+}
 
 interface StepContentProps {
   step: WizardStep
@@ -99,6 +126,46 @@ export function StepContent({
 
                 {expanded && (
                   <div className="substep-body">
+                    {sub.emailTemplate && (
+                      <div className="email-template-block">
+                        <div className="email-template-header">
+                          <span className="email-template-label">📧 Email Template</span>
+                          <a
+                            className="btn btn-mail"
+                            href={buildMailtoLink(sub.emailTemplate)}
+                            title="Open in your email client"
+                          >
+                            ✉️ Compose Email
+                          </a>
+                        </div>
+                        <div className="email-template-content">
+                          <div className="email-template-subject">
+                            <strong>Subject:</strong> {renderText(sub.emailTemplate.subject)}
+                          </div>
+                          <div className="email-template-body">
+                            <p>{renderText(sub.emailTemplate.greeting)}</p>
+                            <p>{renderText(sub.emailTemplate.intro)}</p>
+                            {sub.emailTemplate.sections.map((section, si) => (
+                              <div key={si} className="email-template-section">
+                                <h4>{renderText(section.heading)}</h4>
+                                {section.lines.map((line, li) => (
+                                  <p key={li}>{renderText(line)}</p>
+                                ))}
+                              </div>
+                            ))}
+                            <div className="email-template-closing">
+                              {sub.emailTemplate.closing.map((line, ci) => (
+                                <span key={ci}>
+                                  {line ? renderText(line) : '\u00A0'}
+                                  <br />
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {sub.details && sub.details.length > 0 && (
                       <ul className="substep-details">
                         {sub.details.map((d, j) => (
