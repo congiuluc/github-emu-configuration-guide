@@ -140,6 +140,32 @@ a:hover {
   text-decoration: none;
 }
 
+.header-repo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-border);
+  border: none;
+  border-radius: var(--radius);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.header-repo-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.header-repo-btn:hover {
+  background: var(--color-muted);
+  text-decoration: none;
+}
+
 .app-container {
   max-width: 900px;
   width: 100%;

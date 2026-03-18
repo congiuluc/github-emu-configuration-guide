@@ -163,6 +163,15 @@ function GuidePage({
         >
           + New Enterprise
         </a>
+        <a
+          href="https://github.com/congiuluc/github-emu-configuration-guide"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="header-repo-btn"
+          title="View source on GitHub"
+        >
+          <GitHubLogo /> Repo
+        </a>
       </header>
 
       <div className="wizard-layout">
