@@ -127,15 +127,24 @@ export function SidebarRight({
 
       {/* Enterprise Name Input */}
       <div className="sidebar-section">
-        <h3 className="sidebar-heading">Enterprise</h3>
-        <div className="sidebar-enterprise-input">
+        <h3 className="sidebar-heading">
+          Enterprise
+          {!enterpriseName && <span className="sidebar-heading-required">required</span>}
+        </h3>
+        {!enterpriseName && (
+          <div className="sidebar-enterprise-hint">
+            <span className="sidebar-enterprise-hint-icon">👇</span>
+            <span>Enter your <strong>enterprise name</strong> — all URLs and links in the guide will update automatically.</span>
+          </div>
+        )}
+        <div className={`sidebar-enterprise-input${!enterpriseName ? ' sidebar-enterprise-input--empty' : ''}`}>
           <span className="sidebar-input-prefix">
             {withDataResidency ? 'https://' : 'github.com/enterprises/'}
           </span>
           <input
             type="text"
             className="sidebar-input"
-            placeholder="contoso"
+            placeholder="your-enterprise"
             value={enterpriseName}
             onChange={e => setEnterpriseName(
               e.target.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
@@ -182,7 +191,7 @@ export function SidebarRight({
               <span className="sidebar-url-label">ACS URL</span>
               <CopyableUrl url={
                 withDataResidency
-                  ? `https://${enterpriseName}.ghe.com/saml/consume`
+                  ? `https://${enterpriseName}.ghe.com/enterprises/${enterpriseName}/saml/consume`
                   : `https://github.com/enterprises/${enterpriseName}/saml/consume`
               } />
             </div>
@@ -190,7 +199,7 @@ export function SidebarRight({
               <span className="sidebar-url-label">Entity ID</span>
               <CopyableUrl url={
                 withDataResidency
-                  ? `https://${enterpriseName}.ghe.com`
+                  ? `https://${enterpriseName}.ghe.com/enterprises/${enterpriseName}`
                   : `https://github.com/enterprises/${enterpriseName}`
               } />
             </div>
@@ -200,8 +209,9 @@ export function SidebarRight({
             </div>
           </div>
         ) : (
-          <div className="sidebar-empty-hint">
-            Enter your enterprise name above to generate URLs.
+          <div className="sidebar-empty-hint sidebar-empty-hint--enterprise">
+            <span className="sidebar-empty-hint-arrow">👆</span>
+            <span>Enter your <strong>enterprise name</strong> above — all URLs will appear here automatically.</span>
           </div>
         )}
       </div>

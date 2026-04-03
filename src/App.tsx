@@ -7,6 +7,7 @@ import { Landing } from './components/Landing'
 import { SidebarLeft } from './components/SidebarLeft'
 import { SidebarRight } from './components/SidebarRight'
 import { StepContent } from './components/StepContent'
+import { Tour } from './components/Tour'
 
 export default function App() {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
@@ -141,11 +142,26 @@ function GuidePage({
 
   const completedCount = steps.filter((_, i) => isStepCompleted(i)).length
 
+  const [showTour, setShowTour] = useState(() => {
+    return !sessionStorage.getItem('emu-tour-seen')
+  })
+
+  const startTour = () => setShowTour(true)
+  const endTour = () => {
+    setShowTour(false)
+    sessionStorage.setItem('emu-tour-seen', '1')
+  }
+
   return (
     <>
+      <Tour active={showTour} onEnd={endTour} />
+
       <header className="app-header">
         <GitHubLogo />
         <h1>EMU Configuration Guide</h1>
+        <button className="header-tour-btn" onClick={startTour} title="Take a guided tour">
+          🎯 Tour
+        </button>
         <a
           href={withDataResidency
             ? 'https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/getting-started-with-data-residency-for-github-enterprise-cloud'
@@ -197,6 +213,8 @@ function GuidePage({
           clearChecked={clearChecked}
           isStepCompleted={isStepCompleted(currentStep)}
           goTo={goTo}
+          enterpriseName={enterpriseName}
+          setEnterpriseName={setEnterpriseName}
         />
 
         <SidebarRight

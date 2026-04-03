@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { ExternalLinkIcon } from './Icons'
 import { renderText } from '../utils/renderText'
 import type { WizardStep, EmailTemplate } from '../wizardData'
@@ -39,6 +39,8 @@ interface StepContentProps {
   clearChecked: (keys: string[]) => void
   isStepCompleted: boolean
   goTo: (index: number) => void
+  enterpriseName: string
+  setEnterpriseName: (name: string) => void
 }
 
 export function StepContent({
@@ -50,8 +52,30 @@ export function StepContent({
   clearChecked,
   isStepCompleted,
   goTo,
+  enterpriseName,
+  setEnterpriseName,
 }: StepContentProps) {
   const [expandedSubs, setExpandedSubs] = useState<Record<string, boolean>>({})
+  const [draftName, setDraftName] = useState('')
+  const bannerInputRef = useRef<HTMLInputElement>(null)
+
+  const stepNeedsEnterpriseName = !enterpriseName && (
+    step.substeps.some(sub =>
+      sub.action.includes('YOUR-ENTERPRISE') ||
+      sub.details?.some(d => d.includes('YOUR-ENTERPRISE')) ||
+      sub.verification.includes('YOUR-ENTERPRISE')
+    ) ||
+    step.description.includes('YOUR-ENTERPRISE') ||
+    step.notes?.some(n => n.includes('YOUR-ENTERPRISE'))
+  )
+
+  const applyEnterpriseName = () => {
+    const clean = draftName.trim()
+    if (clean) {
+      setEnterpriseName(clean)
+      setDraftName('')
+    }
+  }
 
   const toggleSub = (key: string) =>
     setExpandedSubs(prev => ({ ...prev, [key]: !prev[key] }))
@@ -83,6 +107,35 @@ export function StepContent({
           Step {currentStep}: {step.title}
         </h2>
         <p className="step-description">{renderText(step.description)}</p>
+
+        {stepNeedsEnterpriseName && (
+          <div className="step-enterprise-banner">
+            <span className="step-enterprise-banner-icon">⚠️</span>
+            <div className="step-enterprise-banner-body">
+              <strong>Enterprise name required</strong> — enter it below to replace all URL placeholders in this step.
+              <div className="step-enterprise-banner-form">
+                <input
+                  ref={bannerInputRef}
+                  type="text"
+                  className="step-enterprise-banner-field"
+                  placeholder="your-enterprise"
+                  value={draftName}
+                  onChange={e => setDraftName(e.target.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase())}
+                  onKeyDown={e => { if (e.key === 'Enter') applyEnterpriseName() }}
+                  spellCheck={false}
+                  autoComplete="off"
+                />
+                <button
+                  className="step-enterprise-banner-apply"
+                  onClick={applyEnterpriseName}
+                  disabled={!draftName.trim()}
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {step.warnings?.map((w, i) => (
           <div key={i} className="info-box warning">

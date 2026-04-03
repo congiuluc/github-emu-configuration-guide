@@ -497,8 +497,8 @@ const drSteps: WizardStep[] = [
         details: [
           'Enterprise URL: https://YOUR-ENTERPRISE.ghe.com',
           'SSO URL: https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE/sso',
-          'SAML ACS URL (Reply URL): https://YOUR-ENTERPRISE.ghe.com/saml/consume',
-          'Entity ID / Audience: https://YOUR-ENTERPRISE.ghe.com',
+          'SAML ACS URL (Reply URL): https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE/saml/consume',
+          'Entity ID / Audience: https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE',
           'SCIM Endpoint: https://api.YOUR-ENTERPRISE.ghe.com/scim/v2/enterprises/YOUR-ENTERPRISE',
         ],
         verification: 'All five enterprise URLs are documented and ready to paste into your IdP configuration.',
@@ -561,8 +561,8 @@ const drSteps: WizardStep[] = [
         action: 'Copy the ACS URL and Entity ID from GitHub enterprise settings into your IdP.',
         details: [
           'Navigate to your enterprise → click "Identity provider" → "Single sign-on configuration".',
-          'ACS URL: https://YOUR-ENTERPRISE.ghe.com/saml/consume',
-          'Entity ID / Audience: https://YOUR-ENTERPRISE.ghe.com',
+          'ACS URL: https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE/saml/consume',
+          'Entity ID / Audience: https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE',
         ],
         verification: 'The ACS URL and Entity ID fields are populated in your IdP SAML configuration.',
         docLinks: [
@@ -5933,10 +5933,10 @@ function buildSsoStep(
   const idpLabel = isEntra ? 'Microsoft Entra ID' : 'Okta'
 
   const acsUrl = dr
-    ? 'https://YOUR-ENTERPRISE.ghe.com/saml/consume'
+    ? 'https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE/saml/consume'
     : 'https://github.com/enterprises/YOUR-ENTERPRISE/saml/consume'
   const entityId = dr
-    ? 'https://YOUR-ENTERPRISE.ghe.com'
+    ? 'https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE'
     : 'https://github.com/enterprises/YOUR-ENTERPRISE'
   const loginUrl = dr
     ? 'https://YOUR-ENTERPRISE.ghe.com/enterprises/YOUR-ENTERPRISE/sso'
