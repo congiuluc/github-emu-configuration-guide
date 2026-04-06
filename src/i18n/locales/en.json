@@ -118,7 +118,8 @@
     "en": "English",
     "it": "Italiano",
     "fr": "Français",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "es": "Español"
   },
   "email": {
     "subjectDr": "Welcome to GitHub Enterprise - YOUR-ENTERPRISE on GHE.com",

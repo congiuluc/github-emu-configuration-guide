@@ -46,11 +46,21 @@ function FlagDE() {
   )
 }
 
+function FlagES() {
+  return (
+    <svg viewBox="0 0 750 500" width="24" height="16">
+      <rect width="750" height="500" fill="#AA151B"/>
+      <rect width="750" height="250" y="125" fill="#F1BF00"/>
+    </svg>
+  )
+}
+
 const languages = [
   { code: 'en', Flag: FlagGB, label: 'EN' },
   { code: 'it', Flag: FlagIT, label: 'IT' },
   { code: 'fr', Flag: FlagFR, label: 'FR' },
   { code: 'de', Flag: FlagDE, label: 'DE' },
+  { code: 'es', Flag: FlagES, label: 'ES' },
 ]
 
 export function LanguageSwitcher() {

@@ -34,6 +34,7 @@ const translationModules: Record<string, () => Promise<{ default: StepTranslatio
   it: () => import('./steps/it.json'),
   fr: () => import('./steps/fr.json'),
   de: () => import('./steps/de.json'),
+  es: () => import('./steps/es.json'),
 }
 
 const cache: Record<string, StepTranslations> = {}

@@ -4,6 +4,7 @@ import en from './locales/en.json'
 import it from './locales/it.json'
 import fr from './locales/fr.json'
 import de from './locales/de.json'
+import es from './locales/es.json'
 import { loadStepTranslations } from './stepTranslations'
 
 const savedLang = localStorage.getItem('emu-guide-lang') || 'en'
@@ -14,6 +15,7 @@ i18n.use(initReactI18next).init({
     it: { translation: it },
     fr: { translation: fr },
     de: { translation: de },
+    es: { translation: es },
   },
   lng: savedLang,
   fallbackLng: 'en',
