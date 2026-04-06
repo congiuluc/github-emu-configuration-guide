@@ -1,13 +1,16 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, useParams, useNavigate, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getSteps, defaultConfig } from './wizardData'
 import type { WizardStep, WizardConfig } from './wizardData'
+import { translateSteps, useStepTranslationsReady } from './i18n/stepTranslations'
 import { GitHubLogo, ExternalLinkIcon } from './components/Icons'
 import { Landing } from './components/Landing'
 import { SidebarLeft } from './components/SidebarLeft'
 import { SidebarRight } from './components/SidebarRight'
 import { StepContent } from './components/StepContent'
 import { Tour } from './components/Tour'
+import { LanguageSwitcher } from './components/LanguageSwitcher'
 
 export default function App() {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
@@ -90,12 +93,15 @@ function GuidePage({
 }: GuidePageProps) {
   const { stepId } = useParams<{ stepId: string }>()
   const navigate = useNavigate()
+  const { t, i18n } = useTranslation()
+  const stepsRev = useStepTranslationsReady()
 
   const withDataResidency = config.dataResidency
 
   const steps = useMemo(
-    () => getSteps(config, enterpriseName),
-    [config, enterpriseName]
+    () => translateSteps(getSteps(config, enterpriseName), enterpriseName),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [config, enterpriseName, i18n.language, stepsRev]
   )
 
   const modePrefix = withDataResidency ? 'dr' : 'standard'
@@ -106,9 +112,9 @@ function GuidePage({
 
   useEffect(() => {
     document.title = step
-      ? `Step ${currentStep}: ${step.shortTitle} — EMU Configuration Guide`
-      : 'EMU Configuration Guide'
-  }, [step, currentStep])
+      ? `${t('step.stepLabel', { num: currentStep })}: ${step.shortTitle} — ${t('header.title')}`
+      : t('header.title')
+  }, [step, currentStep, t])
 
   if (!step) {
     return <Navigate to={`/${modePrefix}/prerequisites`} replace />
@@ -119,6 +125,7 @@ function GuidePage({
   const goTo = (index: number) => {
     if (index >= 0 && index < steps.length) {
       navigate(`/${modePrefix}/${stripPrefix(steps[index].id)}`)
+      window.scrollTo({ top: 0 })
     }
   }
 
@@ -158,9 +165,10 @@ function GuidePage({
 
       <header className="app-header">
         <GitHubLogo />
-        <h1>EMU Configuration Guide</h1>
-        <button className="header-tour-btn" onClick={startTour} title="Take a guided tour">
-          🎯 Tour
+        <h1>{t('header.title')}</h1>
+        <LanguageSwitcher />
+        <button className="header-tour-btn" onClick={startTour} title={t('tour.closeTour')}>
+          {t('header.tour')}
         </button>
         <a
           href={withDataResidency
@@ -171,7 +179,7 @@ function GuidePage({
           rel="noopener noreferrer"
           className="header-link-btn"
         >
-          <ExternalLinkIcon /> How to create EMU
+          <ExternalLinkIcon /> {t('header.howToCreateEmu')}
         </a>
         <a
           href="https://github.com/account/enterprises/new?users_type=enterprise_managed"
@@ -179,7 +187,7 @@ function GuidePage({
           rel="noopener noreferrer"
           className="header-new-enterprise-btn"
         >
-          + New Enterprise
+          {t('header.newEnterprise')}
         </a>
         <a
           href="https://github.com/congiuluc/github-emu-configuration-guide"
@@ -188,7 +196,7 @@ function GuidePage({
           className="header-repo-btn"
           title="View source on GitHub"
         >
-          <GitHubLogo /> Repo
+          <GitHubLogo /> {t('header.repo')}
         </a>
       </header>
 

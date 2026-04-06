@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { GitHubLogo, ExternalLinkIcon } from './Icons'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import type { WizardConfig } from '../wizardData'
 
 interface LandingProps {
@@ -9,6 +11,7 @@ interface LandingProps {
 
 export function Landing({ config, updateConfig }: LandingProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const startGuide = (dr: boolean) => {
     updateConfig({ dataResidency: dr })
@@ -23,14 +26,15 @@ export function Landing({ config, updateConfig }: LandingProps) {
     <>
       <header className="app-header">
         <GitHubLogo />
-        <h1>EMU Configuration Guide</h1>
+        <h1>{t('header.title')}</h1>
+        <LanguageSwitcher />
         <a
           href="https://github.com/account/enterprises/new?users_type=enterprise_managed"
           target="_blank"
           rel="noopener noreferrer"
           className="header-new-enterprise-btn"
         >
-          + New Enterprise
+          {t('header.newEnterprise')}
         </a>
         <a
           href="https://github.com/congiuluc/github-emu-configuration-guide"
@@ -39,7 +43,7 @@ export function Landing({ config, updateConfig }: LandingProps) {
           className="header-repo-btn"
           title="View source on GitHub"
         >
-          <GitHubLogo /> Repo
+          <GitHubLogo /> {t('header.repo')}
         </a>
       </header>
       <main className="landing-container">
@@ -47,19 +51,19 @@ export function Landing({ config, updateConfig }: LandingProps) {
           <div className="landing-logo">
             <GitHubLogo />
           </div>
-          <h2 className="landing-title">GitHub Enterprise Managed Users</h2>
+          <h2 className="landing-title">{t('landing.title')}</h2>
           <p className="landing-subtitle">
-            Step-by-step guide to configure EMU with SSO, SCIM provisioning, and GitHub Copilot.
+            {t('landing.subtitle')}
           </p>
         </div>
 
         <div className="landing-config">
-          <h3 className="landing-config-title">Configure your setup</h3>
+          <h3 className="landing-config-title">{t('landing.configTitle')}</h3>
 
           <div className="landing-config-grid">
             {/* Identity Provider */}
             <div className="landing-config-group">
-              <label className="landing-config-label">🔐 Identity Provider</label>
+              <label className="landing-config-label">{t('landing.idpLabel')}</label>
               <div className="landing-config-options">
                 <button
                   className={`config-option-btn ${config.idpType === 'entra-id' ? 'active' : ''}`}
@@ -76,14 +80,14 @@ export function Landing({ config, updateConfig }: LandingProps) {
               </div>
               <span className="landing-config-hint">
                 {config.idpType === 'entra-id'
-                  ? 'Recommended — supports SAML and OIDC with Conditional Access'
-                  : 'Supports SAML only for GitHub EMU'}
+                  ? t('landing.idpEntraHint')
+                  : t('landing.idpOktaHint')}
               </span>
             </div>
 
             {/* SSO Protocol */}
             <div className="landing-config-group">
-              <label className="landing-config-label">🔑 SSO Protocol</label>
+              <label className="landing-config-label">{t('landing.ssoLabel')}</label>
               <div className="landing-config-options">
                 <button
                   className={`config-option-btn ${config.ssoProtocol === 'saml' ? 'active' : ''}`}
@@ -103,86 +107,86 @@ export function Landing({ config, updateConfig }: LandingProps) {
               </div>
               <span className="landing-config-hint">
                 {config.ssoProtocol === 'oidc'
-                  ? 'Enables Conditional Access Policy (CAP) enforcement'
-                  : 'Standard SSO protocol — widely supported'}
+                  ? t('landing.ssoOidcHint')
+                  : t('landing.ssoSamlHint')}
               </span>
             </div>
 
             {/* Orgs & Policies */}
             <div className="landing-config-group">
-              <label className="landing-config-label">🏢 Orgs &amp; Policies</label>
+              <label className="landing-config-label">{t('landing.orgsLabel')}</label>
               <div className="landing-config-options">
                 <button
                   className={`config-option-btn ${config.manageOrgs ? 'active' : ''}`}
                   onClick={() => updateConfig({ manageOrgs: true })}
                 >
-                  Include
+                  {t('common.include')}
                 </button>
                 <button
                   className={`config-option-btn ${!config.manageOrgs ? 'active' : ''}`}
                   onClick={() => updateConfig({ manageOrgs: false })}
                 >
-                  Skip
+                  {t('common.skip')}
                 </button>
               </div>
               <span className="landing-config-hint">
                 {config.manageOrgs
-                  ? 'Includes creating organizations, repos, and enterprise policies'
-                  : 'Focus on SSO, SCIM, and Copilot seat assignment'}
+                  ? t('landing.orgsIncludeHint')
+                  : t('landing.orgsSkipHint')}
               </span>
             </div>
 
             {/* Copilot Management */}
             <div className="landing-config-group">
-              <label className="landing-config-label">🤖 GitHub Copilot</label>
+              <label className="landing-config-label">{t('landing.copilotLabel')}</label>
               <div className="landing-config-options">
                 <button
                   className={`config-option-btn ${config.manageCopilot ? 'active' : ''}`}
                   onClick={() => updateConfig({ manageCopilot: true })}
                 >
-                  Include
+                  {t('common.include')}
                 </button>
                 <button
                   className={`config-option-btn ${!config.manageCopilot ? 'active' : ''}`}
                   onClick={() => updateConfig({ manageCopilot: false })}
                 >
-                  Skip
+                  {t('common.skip')}
                 </button>
               </div>
               <span className="landing-config-hint">
                 {config.manageCopilot
-                  ? 'Includes enabling, policies, seat assignment, and IDE setup'
-                  : 'Guide will only cover SSO and SCIM provisioning'}
+                  ? t('landing.copilotIncludeHint')
+                  : t('landing.copilotSkipHint')}
               </span>
             </div>
 
             {/* GitHub Advanced Security */}
             <div className="landing-config-group">
-              <label className="landing-config-label">🛡️ GitHub Advanced Security</label>
+              <label className="landing-config-label">{t('landing.ghasLabel')}</label>
               <div className="landing-config-options">
                 <button
                   className={`config-option-btn ${config.manageGHAS ? 'active' : ''}`}
                   onClick={() => updateConfig({ manageGHAS: true })}
                 >
-                  Include
+                  {t('common.include')}
                 </button>
                 <button
                   className={`config-option-btn ${!config.manageGHAS ? 'active' : ''}`}
                   onClick={() => updateConfig({ manageGHAS: false })}
                 >
-                  Skip
+                  {t('common.skip')}
                 </button>
               </div>
               <span className="landing-config-hint">
                 {config.manageGHAS
-                  ? 'Includes code scanning, secret scanning, Dependabot, and security overview'
-                  : 'Skip advanced security configuration steps'}
+                  ? t('landing.ghasIncludeHint')
+                  : t('landing.ghasSkipHint')}
               </span>
             </div>
           </div>
 
           <div className="landing-config-summary">
-            <span className="config-summary-label">Your configuration:</span>
+            <span className="config-summary-label">{t('landing.configSummary')}</span>
             <span className="config-summary-badge">{idpLabel}</span>
             <span className="config-summary-badge">{protoLabel}</span>
             {config.manageOrgs && <span className="config-summary-badge">Orgs</span>}
@@ -191,51 +195,49 @@ export function Landing({ config, updateConfig }: LandingProps) {
           </div>
         </div>
 
-        <p className="landing-prompt">Choose your enterprise type to get started:</p>
+        <p className="landing-prompt">{t('landing.choosePrompt')}</p>
 
         <div className="landing-cards">
           <button className="landing-card" onClick={() => startGuide(true)}>
             <div className="landing-card-icon">🌍</div>
-            <h3 className="landing-card-title">With Data Residency</h3>
-            <p className="landing-card-domain">YOUR-ENTERPRISE.ghe.com</p>
+            <h3 className="landing-card-title">{t('landing.withDR')}</h3>
+            <p className="landing-card-domain">{t('landing.withDRDomain')}</p>
             <p className="landing-card-desc">
-              Your enterprise data is stored in a specific geographic region. Each enterprise gets its
-              own GHE.com subdomain with isolated data storage.
+              {t('landing.withDRDesc')}
             </p>
             <ul className="landing-card-features">
-              <li>Dedicated subdomain (ghe.com)</li>
-              <li>Region-specific data storage</li>
-              <li>IDE requires enterprise URL config</li>
+              <li>{t('landing.withDRFeature1')}</li>
+              <li>{t('landing.withDRFeature2')}</li>
+              <li>{t('landing.withDRFeature3')}</li>
             </ul>
-            <span className="landing-card-cta">Start Setup →</span>
+            <span className="landing-card-cta">{t('landing.startSetup')}</span>
           </button>
 
           <button className="landing-card" onClick={() => startGuide(false)}>
             <div className="landing-card-icon">☁️</div>
-            <h3 className="landing-card-title">Without Data Residency</h3>
-            <p className="landing-card-domain">github.com/enterprises/YOUR-ENTERPRISE</p>
+            <h3 className="landing-card-title">{t('landing.withoutDR')}</h3>
+            <p className="landing-card-domain">{t('landing.withoutDRDomain')}</p>
             <p className="landing-card-desc">
-              Standard GitHub Enterprise Cloud on github.com. Your enterprise is managed within the
-              global GitHub platform without region-specific data guarantees.
+              {t('landing.withoutDRDesc')}
             </p>
             <ul className="landing-card-features">
-              <li>Standard github.com platform</li>
-              <li>Global data storage</li>
-              <li>Standard IDE sign-in flow</li>
+              <li>{t('landing.withoutDRFeature1')}</li>
+              <li>{t('landing.withoutDRFeature2')}</li>
+              <li>{t('landing.withoutDRFeature3')}</li>
             </ul>
-            <span className="landing-card-cta">Start Setup →</span>
+            <span className="landing-card-cta">{t('landing.startSetup')}</span>
           </button>
         </div>
 
         <div className="landing-footer">
           <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-github-enterprise-cloud-with-data-residency"
              target="_blank" rel="noopener noreferrer">
-            <ExternalLinkIcon /> Learn more about Data Residency
+            <ExternalLinkIcon /> {t('landing.learnMoreDR')}
           </a>
           <span className="landing-separator">•</span>
           <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/understanding-iam-for-enterprises/about-enterprise-managed-users"
              target="_blank" rel="noopener noreferrer">
-            <ExternalLinkIcon /> About Enterprise Managed Users
+            <ExternalLinkIcon /> {t('landing.aboutEMU')}
           </a>
         </div>
       </main>

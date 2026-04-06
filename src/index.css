@@ -1573,6 +1573,58 @@ a:hover {
   background: var(--color-success);
 }
 
+/* Language Switcher */
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  margin-right: 8px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-fg-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  line-height: 1;
+}
+
+.lang-btn svg {
+  flex-shrink: 0;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.lang-btn.active {
+  background: var(--color-accent-emphasis);
+  border-color: var(--color-accent-emphasis);
+  color: #fff;
+}
+
+.lang-label {
+  letter-spacing: 0.04em;
+}
+
 /* Tour start button in header */
 .header-tour-btn {
   display: inline-flex;

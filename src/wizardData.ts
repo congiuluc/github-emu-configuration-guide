@@ -1,3 +1,5 @@
+import i18n from './i18n'
+
 export type IdpType = 'entra-id' | 'okta';
 export type SsoProtocol = 'saml' | 'oidc';
 
@@ -5800,19 +5802,20 @@ function buildEmailTemplate(config: WizardConfig): EmailTemplate {
   const { dataResidency, idpType, manageCopilot } = config
   const isEntra = idpType === 'entra-id'
   const idpLabel = isEntra ? 'Microsoft Entra ID' : 'Okta'
+  const t = i18n.t.bind(i18n)
 
   const enterpriseUrl = dataResidency
     ? 'https://YOUR-ENTERPRISE.ghe.com'
     : 'https://github.com/enterprises/YOUR-ENTERPRISE'
 
   const subject = dataResidency
-    ? 'Welcome to GitHub Enterprise - YOUR-ENTERPRISE on GHE.com'
-    : 'Welcome to GitHub Enterprise - YOUR-ENTERPRISE'
+    ? t('email.subjectDr')
+    : t('email.subjectNoDr')
 
   // --- Access section ---
   const accessLines: string[] = [
-    `**Enterprise URL:** ${enterpriseUrl}`,
-    `Navigate to the URL above. You will be redirected to **${idpLabel}** for single sign-on. Sign in with your **corporate credentials**. Your GitHub username will be in the format **username_SHORTCODE**, automatically provisioned from your ${idpLabel} account.`,
+    t('email.accessUrl', { url: enterpriseUrl }),
+    t('email.accessInstructions', { idp: idpLabel }),
   ]
 
   // --- Copilot / IDE section (only if manageCopilot is enabled) ---
@@ -5820,73 +5823,53 @@ function buildEmailTemplate(config: WizardConfig): EmailTemplate {
   if (manageCopilot) {
     const ideLines: string[] = []
     if (dataResidency) {
-      ideLines.push(
-        '**GitHub Copilot** is available for code completions and chat. Because our enterprise uses **GHE.com** (data residency), you must configure the enterprise URL in your IDE before signing in.',
-      )
-      ideLines.push(
-        '**VS Code** (latest: v1.100+): Open Settings (Ctrl+, / Cmd+,), search "enterprise", set "Github-enterprise: Uri" to https://YOUR-ENTERPRISE.ghe.com. Then search "copilot", under "GitHub > Copilot: Advanced" click "Edit in settings.json" and add "authProvider": "github-enterprise". Save and sign in when prompted.',
-      )
-      ideLines.push(
-        '**Visual Studio 2026** (latest: v18.0+): Go to File > Account Settings > Add > "Add GitHub Enterprise account" (NOT "Add GitHub account"). Enter https://YOUR-ENTERPRISE.ghe.com and complete SSO sign-in.',
-      )
-      ideLines.push(
-        '**JetBrains IDEs** (2025.1+, e.g. IntelliJ IDEA, Rider, WebStorm): Install "GitHub Copilot" plugin. Go to Settings > Languages & Frameworks > GitHub Copilot, set Auth Provider to "GitHub Enterprise", enter https://YOUR-ENTERPRISE.ghe.com, and sign in.',
-      )
+      ideLines.push(t('email.copilotIntroDr'))
+      ideLines.push(t('email.copilotVsCodeDr'))
+      ideLines.push(t('email.copilotVsDr'))
+      ideLines.push(t('email.copilotJetBrainsDr'))
     } else {
-      ideLines.push(
-        '**GitHub Copilot** is available for code completions and chat in your IDE.',
-      )
-      ideLines.push(
-        '**VS Code** (latest: v1.100+): Install "GitHub Copilot" and "GitHub Copilot Chat" extensions. Click the Copilot icon in the status bar, click "Sign in to GitHub" and complete SSO with your managed user account (**username_SHORTCODE**).',
-      )
-      ideLines.push(
-        '**Visual Studio 2026** (latest: v18.0+): Go to File > Account Settings, sign in with your GitHub managed user account and complete SSO.',
-      )
-      ideLines.push(
-        '**JetBrains IDEs** (2025.1+, e.g. IntelliJ IDEA, Rider, WebStorm): Install "GitHub Copilot" plugin, click "Sign in to GitHub" when prompted, and complete SSO.',
-      )
+      ideLines.push(t('email.copilotIntroNoDr'))
+      ideLines.push(t('email.copilotVsCodeNoDr'))
+      ideLines.push(t('email.copilotVsNoDr'))
+      ideLines.push(t('email.copilotJetBrainsNoDr'))
     }
     copilotSection.push({
-      heading: '\uD83D\uDCBB IDE SETUP - GitHub Copilot',
+      heading: t('email.copilotHeading'),
       lines: ideLines,
     })
   }
 
   // --- Important section ---
   const importantLines: string[] = [
-    `This is a **managed user account**, separate from any personal GitHub.com account. You cannot create personal repositories or contribute to public open-source projects outside the enterprise. Your account is **provisioned and deprovisioned automatically** via ${idpLabel}.`,
+    t('email.importantLine', { idp: idpLabel }),
   ]
 
   // --- Resources section ---
   const resourceLines: string[] = [
-    'Managed user info: https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts',
+    t('email.resourceManaged'),
   ]
   if (manageCopilot) {
-    resourceLines.push(
-      'Copilot quickstart: https://docs.github.com/en/copilot/get-started',
-    )
+    resourceLines.push(t('email.resourceCopilot'))
     if (dataResidency) {
-      resourceLines.push(
-        'GHE.com auth guide: https://docs.github.com/en/copilot/how-tos/configure-personal-settings/authenticate-to-ghecom',
-      )
+      resourceLines.push(t('email.resourceGheCom'))
     }
   }
 
   return {
     subject,
-    greeting: 'Hello,',
-    intro: 'You now have access to our **GitHub Enterprise** environment. Here is everything you need to get started.',
+    greeting: t('email.greeting'),
+    intro: t('email.intro'),
     sections: [
-      { heading: '\uD83C\uDFE2 ENTERPRISE ACCESS', lines: accessLines },
+      { heading: t('email.accessHeading'), lines: accessLines },
       ...copilotSection,
-      { heading: '\u26A0\uFE0F IMPORTANT', lines: importantLines },
-      { heading: '\uD83D\uDCDA RESOURCES', lines: resourceLines },
+      { heading: t('email.importantHeading'), lines: importantLines },
+      { heading: t('email.resourcesHeading'), lines: resourceLines },
     ],
     closing: [
-      'Questions or sign-in issues? Contact **[YOUR IT SUPPORT CHANNEL]**.',
+      t('email.closingSupport'),
       '',
-      'Best regards,',
-      '[YOUR NAME / TEAM]',
+      t('email.closingRegards'),
+      t('email.closingName'),
     ],
   }
 }
@@ -5895,6 +5878,9 @@ function replaceEnterprise(steps: WizardStep[], name: string): WizardStep[] {
   const r = (s: string) => s.replaceAll('YOUR-ENTERPRISE', name || 'YOUR-ENTERPRISE')
   return steps.map(step => ({
     ...step,
+    title: r(step.title),
+    description: r(step.description),
+    prerequisites: step.prerequisites?.map(r),
     substeps: step.substeps.map(sub => ({
       ...sub,
       action: r(sub.action),
@@ -5914,7 +5900,6 @@ function replaceEnterprise(steps: WizardStep[], name: string): WizardStep[] {
     notes: step.notes?.map(r),
     warnings: step.warnings?.map(r),
     tips: step.tips?.map(r),
-    description: r(step.description),
   }))
 }
 

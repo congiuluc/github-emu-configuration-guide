@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 interface SidebarLeftProps {
   withDataResidency: boolean
   steps: Array<{ id: string; shortTitle: string; substeps: unknown[] }>
@@ -19,31 +21,32 @@ export function SidebarLeft({
   goTo,
   handleModeChange,
 }: SidebarLeftProps) {
+  const { t } = useTranslation()
   return (
     <aside className="sidebar sidebar-left">
       <div className="sidebar-section">
-        <h3 className="sidebar-heading">Deployment Mode</h3>
+        <h3 className="sidebar-heading">{t('sidebar.deploymentMode')}</h3>
         <div className="sidebar-mode-toggle">
           <button
             className={`sidebar-mode-btn ${withDataResidency ? 'active' : ''}`}
             onClick={() => handleModeChange(true)}
           >
             <span className="sidebar-mode-icon">🌍</span>
-            <span>Data Residency</span>
+            <span>{t('sidebar.dataResidency')}</span>
           </button>
           <button
             className={`sidebar-mode-btn ${!withDataResidency ? 'active' : ''}`}
             onClick={() => handleModeChange(false)}
           >
             <span className="sidebar-mode-icon">☁️</span>
-            <span>Standard</span>
+            <span>{t('sidebar.standard')}</span>
           </button>
         </div>
       </div>
 
       <div className="sidebar-section sidebar-steps-section">
         <h3 className="sidebar-heading">
-          Steps
+          {t('sidebar.steps')}
           <span className="sidebar-step-count">{completedCount}/{steps.length}</span>
         </h3>
         <nav className="sidebar-steps">

@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ExternalLinkIcon } from './Icons'
 import { CopyableUrl } from './CopyableUrl'
 import type { WizardConfig, WizardStep } from '../wizardData'
@@ -20,6 +21,7 @@ export function SidebarRight({
   setEnterpriseName,
   step,
 }: SidebarRightProps) {
+  const { t } = useTranslation()
   const idpLabel = config.idpType === 'entra-id' ? 'Entra ID' : 'Okta'
   const protoLabel = config.ssoProtocol === 'saml' ? 'SAML' : 'OIDC'
 
@@ -47,7 +49,7 @@ export function SidebarRight({
     <aside className="sidebar sidebar-right">
       {/* IdP & SSO Config */}
       <div className="sidebar-section">
-        <h3 className="sidebar-heading">Identity & SSO</h3>
+        <h3 className="sidebar-heading">{t('sidebar.identitySso')}</h3>
         <div className="sidebar-config-badges">
           <span className="sidebar-badge idp">{idpLabel}</span>
           <span className="sidebar-badge protocol">{protoLabel}</span>
@@ -83,58 +85,58 @@ export function SidebarRight({
 
       {/* Scope: Copilot, Orgs & GHAS */}
       <div className="sidebar-section">
-        <h3 className="sidebar-heading">Scope</h3>
+        <h3 className="sidebar-heading">{t('sidebar.scope')}</h3>
         <div className="sidebar-idp-toggle">
-          <span className="sidebar-toggle-label">🏢 Orgs</span>
+          <span className="sidebar-toggle-label">{t('sidebar.orgs')}</span>
           <button
             className={`sidebar-idp-btn ${config.manageOrgs ? 'active' : ''}`}
             onClick={() => updateConfig({ manageOrgs: true })}
             title="Include organization creation and enterprise policies steps"
-          >Include</button>
+          >{t('sidebar.include')}</button>
           <button
             className={`sidebar-idp-btn ${!config.manageOrgs ? 'active' : ''}`}
             onClick={() => updateConfig({ manageOrgs: false })}
             title="Skip organization and policy steps"
-          >Skip</button>
+          >{t('sidebar.skip')}</button>
         </div>
         <div className="sidebar-idp-toggle">
-          <span className="sidebar-toggle-label">🤖 Copilot</span>
+          <span className="sidebar-toggle-label">{t('sidebar.copilot')}</span>
           <button
             className={`sidebar-idp-btn ${config.manageCopilot ? 'active' : ''}`}
             onClick={() => updateConfig({ manageCopilot: true })}
             title="Include Copilot enablement, policies, seats, and IDE setup steps"
-          >Include</button>
+          >{t('sidebar.include')}</button>
           <button
             className={`sidebar-idp-btn ${!config.manageCopilot ? 'active' : ''}`}
             onClick={() => updateConfig({ manageCopilot: false })}
             title="Skip all Copilot configuration steps"
-          >Skip</button>
+          >{t('sidebar.skip')}</button>
         </div>
         <div className="sidebar-idp-toggle">
-          <span className="sidebar-toggle-label">🛡️ GHAS</span>
+          <span className="sidebar-toggle-label">{t('sidebar.ghas')}</span>
           <button
             className={`sidebar-idp-btn ${config.manageGHAS ? 'active' : ''}`}
             onClick={() => updateConfig({ manageGHAS: true })}
             title="Include GitHub Advanced Security configuration steps"
-          >Include</button>
+          >{t('sidebar.include')}</button>
           <button
             className={`sidebar-idp-btn ${!config.manageGHAS ? 'active' : ''}`}
             onClick={() => updateConfig({ manageGHAS: false })}
             title="Skip Advanced Security steps"
-          >Skip</button>
+          >{t('sidebar.skip')}</button>
         </div>
       </div>
 
       {/* Enterprise Name Input */}
       <div className="sidebar-section">
         <h3 className="sidebar-heading">
-          Enterprise
-          {!enterpriseName && <span className="sidebar-heading-required">required</span>}
+          {t('sidebar.enterprise')}
+          {!enterpriseName && <span className="sidebar-heading-required">{t('sidebar.required')}</span>}
         </h3>
         {!enterpriseName && (
           <div className="sidebar-enterprise-hint">
             <span className="sidebar-enterprise-hint-icon">👇</span>
-            <span>Enter your <strong>enterprise name</strong> — all URLs and links in the guide will update automatically.</span>
+            <span dangerouslySetInnerHTML={{ __html: t('sidebar.enterpriseHint') }} />
           </div>
         )}
         <div className={`sidebar-enterprise-input${!enterpriseName ? ' sidebar-enterprise-input--empty' : ''}`}>
@@ -160,7 +162,7 @@ export function SidebarRight({
 
       {/* Enterprise URLs */}
       <div className="sidebar-section">
-        <h3 className="sidebar-heading">Enterprise URLs</h3>
+        <h3 className="sidebar-heading">{t('sidebar.enterpriseUrls')}</h3>
         {enterpriseName ? (
           <div className="sidebar-urls">
             <div className="sidebar-url-item">
@@ -204,14 +206,14 @@ export function SidebarRight({
               } />
             </div>
             <div className="sidebar-url-item">
-              <span className="sidebar-url-label">Setup User</span>
+              <span className="sidebar-url-label">{t('sidebar.setupUser')}</span>
               <code className="enterprise-setup-user">{enterpriseName}_admin</code>
             </div>
           </div>
         ) : (
           <div className="sidebar-empty-hint sidebar-empty-hint--enterprise">
             <span className="sidebar-empty-hint-arrow">👆</span>
-            <span>Enter your <strong>enterprise name</strong> above — all URLs will appear here automatically.</span>
+            <span dangerouslySetInnerHTML={{ __html: t('sidebar.enterpriseUrlHint') }} />
           </div>
         )}
       </div>
@@ -219,7 +221,7 @@ export function SidebarRight({
       {/* Documentation for current step */}
       <div className="sidebar-section sidebar-docs-section">
         <h3 className="sidebar-heading">
-          Documentation
+          {t('sidebar.documentation')}
           <span className="sidebar-doc-count">{stepDocLinks.length}</span>
         </h3>
         {stepDocLinks.length > 0 ? (
@@ -244,7 +246,7 @@ export function SidebarRight({
           </div>
         ) : (
           <div className="sidebar-empty-hint">
-            No documentation links for this step.
+            {t('sidebar.noDocsHint')}
           </div>
         )}
       </div>

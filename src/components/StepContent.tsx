@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ExternalLinkIcon } from './Icons'
 import { renderText } from '../utils/renderText'
 import type { WizardStep, EmailTemplate } from '../wizardData'
@@ -58,6 +59,7 @@ export function StepContent({
   const [expandedSubs, setExpandedSubs] = useState<Record<string, boolean>>({})
   const [draftName, setDraftName] = useState('')
   const bannerInputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   const stepNeedsEnterpriseName = !enterpriseName && (
     step.substeps.some(sub =>
@@ -104,7 +106,7 @@ export function StepContent({
     <main className="wizard-content">
       <div className="step-card">
         <h2>
-          Step {currentStep}: {step.title}
+          {t('step.stepLabel', { num: currentStep })}: {step.title}
         </h2>
         <p className="step-description">{renderText(step.description)}</p>
 
@@ -112,7 +114,7 @@ export function StepContent({
           <div className="step-enterprise-banner">
             <span className="step-enterprise-banner-icon">⚠️</span>
             <div className="step-enterprise-banner-body">
-              <strong>Enterprise name required</strong> — enter it below to replace all URL placeholders in this step.
+              <strong>{t('step.enterpriseRequired')}</strong> — {t('step.enterpriseBannerText')}
               <div className="step-enterprise-banner-form">
                 <input
                   ref={bannerInputRef}
@@ -130,7 +132,7 @@ export function StepContent({
                   onClick={applyEnterpriseName}
                   disabled={!draftName.trim()}
                 >
-                  Apply
+                  {t('step.apply')}
                 </button>
               </div>
             </div>
@@ -139,14 +141,14 @@ export function StepContent({
 
         {step.warnings?.map((w, i) => (
           <div key={i} className="info-box warning">
-            <div className="box-title">⚠️ Warning</div>
+            <div className="box-title">{t('step.warning')}</div>
             {renderText(w)}
           </div>
         ))}
 
         {step.prerequisites && step.prerequisites.length > 0 && (
           <div className="info-box prerequisites">
-            <div className="box-title">📋 Prerequisites for this step</div>
+            <div className="box-title">{t('step.prerequisites')}</div>
             <ul className="prerequisites-list">
               {step.prerequisites.map((p, i) => (
                 <li key={i}>{renderText(p)}</li>
@@ -156,10 +158,10 @@ export function StepContent({
         )}
 
         <div className="substeps-toolbar">
-          <h3>Step-by-step Instructions</h3>
+          <h3>{t('step.instructions')}</h3>
           <div className="substeps-toolbar-btns">
-            <button className="substeps-toggle-btn" onClick={expandAll}>Expand All</button>
-            <button className="substeps-toggle-btn" onClick={collapseAll}>Collapse All</button>
+            <button className="substeps-toggle-btn" onClick={expandAll}>{t('step.expandAll')}</button>
+            <button className="substeps-toggle-btn" onClick={collapseAll}>{t('step.collapseAll')}</button>
           </div>
         </div>
 
@@ -182,7 +184,7 @@ export function StepContent({
                   <div className="substep-action">
                     {renderText(sub.action)}
                     {/\(optional|\(Optional/i.test(sub.action) && (
-                      <span className="badge-optional">Optional</span>
+                      <span className="badge-optional">{t('step.optional')}</span>
                     )}
                   </div>
                   <span className={`substep-chevron ${expanded ? 'open' : ''}`}>▸</span>
@@ -193,18 +195,18 @@ export function StepContent({
                     {sub.emailTemplate && (
                       <div className="email-template-block">
                         <div className="email-template-header">
-                          <span className="email-template-label">📧 Email Template</span>
+                          <span className="email-template-label">{t('step.emailTemplate')}</span>
                           <a
                             className="btn btn-mail"
                             href={buildMailtoLink(sub.emailTemplate)}
                             title="Open in your email client"
                           >
-                            ✉️ Compose Email
+                            {t('step.composeEmail')}
                           </a>
                         </div>
                         <div className="email-template-content">
                           <div className="email-template-subject">
-                            <strong>Subject:</strong> {renderText(sub.emailTemplate.subject)}
+                            <strong>{t('step.subject')}</strong> {renderText(sub.emailTemplate.subject)}
                           </div>
                           <div className="email-template-body">
                             <p>{renderText(sub.emailTemplate.greeting)}</p>
@@ -266,7 +268,7 @@ export function StepContent({
                         id={checkKey}
                       />
                       <label htmlFor={checkKey}>
-                        <span className="verification-label">Verify:</span> {renderText(sub.verification)}
+                        <span className="verification-label">{t('step.verify')}</span> {renderText(sub.verification)}
                       </label>
                     </div>
                   </div>
@@ -278,28 +280,28 @@ export function StepContent({
 
         {step.notes && step.notes.length > 0 && (
           <>
-            <h3>IdP-Specific Notes</h3>
+            <h3>{t('step.idpNotes')}</h3>
             {step.notes.map((n, i) => (
               <div key={i} className="info-box info">
-                <div className="box-title">ℹ️ Note</div>
+                <div className="box-title">{t('step.note')}</div>
                 {renderText(n)}
               </div>
             ))}
           </>
         )}
 
-        {step.tips?.map((t, i) => (
+        {step.tips?.map((tip, i) => (
           <div key={i} className="info-box tip">
-            <div className="box-title">💡 Tip</div>
-            {renderText(t)}
+            <div className="box-title">{t('step.tip')}</div>
+            {renderText(tip)}
           </div>
         ))}
 
         <div className="step-progress-summary">
           <span>
-            {requiredVerified} of {requiredSubs.length} required verifications completed
+            {t('step.progressSummary', { done: requiredVerified, total: requiredSubs.length })}
             {verifiedCount > requiredVerified && (
-              <> ({verifiedCount - requiredVerified} optional)</>)}
+              <> ({t('step.optionalCount', { count: verifiedCount - requiredVerified })})</>)}
           </span>
           {verifiedCount > 0 && (
             <button
@@ -312,11 +314,11 @@ export function StepContent({
                 )
               }
             >
-              Clear Verified
+              {t('step.clearVerified')}
             </button>
           )}
           {isStepCompleted && (
-            <span className="step-complete-badge">✓ All verified</span>
+            <span className="step-complete-badge">{t('step.allVerified')}</span>
           )}
         </div>
 
@@ -326,26 +328,24 @@ export function StepContent({
             disabled={currentStep === 0}
             onClick={() => goTo(currentStep - 1)}
           >
-            ← Previous
+            {t('step.previous')}
           </button>
           {currentStep < totalSteps - 1 ? (
             <button
               className="btn btn-primary"
               onClick={() => goTo(currentStep + 1)}
             >
-              Next →
+              {t('step.next')}
             </button>
           ) : (
             <button
               className="btn btn-primary"
               disabled={!isStepCompleted}
               onClick={() =>
-                alert(
-                  '🎉 Congratulations! Your EMU enterprise is fully configured.'
-                )
+                alert(t('step.congratulations'))
               }
             >
-              Complete Setup ✓
+              {t('step.completeSetup')}
             </button>
           )}
         </div>
