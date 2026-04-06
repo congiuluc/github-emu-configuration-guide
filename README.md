@@ -107,9 +107,15 @@ npm run preview
 └── src/
     ├── App.tsx             # Main app with routing
     ├── main.tsx            # React entry point
+    ├── main.ts             # Counter demo entry point
+    ├── counter.ts          # Counter module
     ├── wizardData.ts       # All wizard steps, substeps, and configuration logic
     ├── index.css           # Global styles
     ├── style.css           # Component styles
+    ├── assets/             # Static image assets
+    │   ├── hero.png
+    │   ├── typescript.svg
+    │   └── vite.svg
     ├── components/
     │   ├── Landing.tsx     # Landing page with configuration options
     │   ├── SidebarLeft.tsx # Step navigation sidebar
