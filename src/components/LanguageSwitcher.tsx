@@ -57,10 +57,10 @@ function FlagES() {
 
 const languages = [
   { code: 'en', Flag: FlagGB, label: 'EN' },
+  { code: 'es', Flag: FlagES, label: 'ES' },
   { code: 'it', Flag: FlagIT, label: 'IT' },
   { code: 'fr', Flag: FlagFR, label: 'FR' },
   { code: 'de', Flag: FlagDE, label: 'DE' },
-  { code: 'es', Flag: FlagES, label: 'ES' },
 ]
 
 export function LanguageSwitcher() {
